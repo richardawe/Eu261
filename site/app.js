@@ -61,7 +61,7 @@ function wireIntakeForm() {
     // so Playwright can inspect it without triggering navigation.
     form.dataset.generatedUrl = url;
 
-    window.location.href = url;
+    window.open(url, "_blank", "noopener");
   });
 }
 
