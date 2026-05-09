@@ -20,8 +20,25 @@
   <main class="container">
     <hgroup>
       <h1>Start your claim</h1>
-      <p>Fill in the details below. This form opens a pre-filled GitHub issue for you to review and submit — we never see your data before you click Submit on GitHub.</p>
+      <p>Fill in the details below and click Submit. No account required.</p>
     </hgroup>
+
+    <!-- Success state (shown after API call succeeds) -->
+    <div id="claim-success" hidden role="alert">
+      <article>
+        <header><strong>Claim submitted</strong></header>
+        <p>Your claim has been logged as <a id="claim-issue-link" href="#" target="_blank" rel="noopener">#<span id="claim-issue-number"></span></a>. Bookmark that link to track progress.</p>
+        <p>Your personal details will be encrypted within a few seconds by the intake workflow. Only the claim handler can decrypt them.</p>
+      </article>
+    </div>
+
+    <!-- Error state (shown if the API call fails) -->
+    <div id="claim-error" hidden role="alert">
+      <article class="banner error">
+        <p>Submission failed: <span id="claim-error-message"></span></p>
+        <p><small>You can also <a id="claim-fallback-link" href="#" target="_blank" rel="noopener">open GitHub directly</a> to submit manually (requires a GitHub account).</small></p>
+      </article>
+    </div>
 
     <div class="pii-notice" role="note">
       🔒 Fields marked <strong>PII</strong> (name, email, booking reference) are included in the issue body but are immediately encrypted by our intake workflow — within seconds of the issue opening, they are replaced with ciphertext. Only the maintainers with the private key can decrypt them.
@@ -254,8 +271,8 @@
         </label>
       </fieldset>
 
-      <button type="submit">Review &amp; submit on GitHub →</button>
-      <p><small>Clicking the button opens a pre-filled GitHub issue. You must be signed into GitHub to submit it.</small></p>
+      <button type="submit">Submit claim</button>
+      <p><small>No account required. Your personal details are encrypted immediately after submission.</small></p>
 
     </form>
   </main>

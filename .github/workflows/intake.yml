@@ -1,0 +1,57 @@
+name: Intake — encrypt PII and mark intake-complete
+
+on:
+  issues:
+    # opened: issue created via deep-link with labels= in URL (our intake form)
+    # labeled: label added manually to an existing issue
+    types: [opened, labeled]
+
+jobs:
+  intake:
+    if: |
+      (github.event.action == 'opened' && contains(github.event.issue.labels.*.name, 'claim')) ||
+      (github.event.action == 'labeled' && github.event.label.name == 'claim')
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -e ".[dev]"
+
+      - name: Encrypt PII in issue body
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          NACL_PUBLIC_KEY: ${{ vars.NACL_PUBLIC_KEY }}
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          python scripts/intake_rewrite.py > /tmp/rewritten_body.md
+          gh issue edit "$ISSUE_NUMBER" \
+            --body-file /tmp/rewritten_body.md \
+            --repo "$GITHUB_REPOSITORY"
+
+      - name: Transition to state:intake-complete
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh issue edit "$ISSUE_NUMBER" \
+            --add-label "state:intake-complete" \
+            --repo "$GITHUB_REPOSITORY"
+
+      - name: Write claim status to gh-pages
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          CURRENT_STATE: state:intake-complete
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/write_status.py

@@ -1,0 +1,43 @@
+name: Setup — create claim lifecycle labels (run once)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  create-labels:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Create all state labels
+        env:
+          GH_TOKEN: ${{ github.token }}
+        # --force updates colour/description if label already exists; never fails
+        run: |
+          declare -A LABELS=(
+            ["claim"]="0075ca|New claim submission"
+            ["state:intake-complete"]="c5def5|PII encrypted, ready for eligibility"
+            ["state:eligibility-passed"]="0e8a16|Eligible under EU 261/2004"
+            ["state:eligibility-failed"]="e4e669|Not eligible under EU 261/2004"
+            ["state:draft-ready"]="d4c5f9|Demand letter drafted"
+            ["state:draft-approved"]="1d76db|Demand letter approved by claimant"
+            ["state:submitted-airline"]="0075ca|Submitted to airline"
+            ["state:awaiting-airline-2"]="e4e669|Awaiting second contact with airline"
+            ["state:airline-accepted"]="0e8a16|Airline accepted the claim"
+            ["state:airline-rejected"]="ee0701|Airline rejected the claim"
+            ["state:escalated-neb"]="d4c5f9|Escalated to National Enforcement Body"
+            ["state:neb-decided-won"]="0e8a16|NEB decided in claimant favour"
+            ["state:neb-decided-lost"]="ee0701|NEB decided against claimant"
+            ["state:closed-won"]="0e8a16|Claim resolved — compensation received"
+            ["state:closed-lost"]="ee0701|Claim closed without compensation"
+            ["state:error"]="d93f0b|Processing error"
+          )
+          for name in "${!LABELS[@]}"; do
+            IFS='|' read -r color desc <<< "${LABELS[$name]}"
+            gh label create "$name" \
+              --color "$color" \
+              --description "$desc" \
+              --repo "$GITHUB_REPOSITORY" \
+              --force
+            echo "Created/updated: $name"
+          done

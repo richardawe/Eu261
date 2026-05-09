@@ -1,0 +1,62 @@
+name: Submit — send claim to airline
+
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  submit:
+    if: github.event.label.name == 'state:draft-approved'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -e ".[dev]"
+
+      - name: Install Playwright browser
+        run: playwright install chromium --with-deps
+
+      - name: Extract approved draft letter
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          # Pull the most recent "Draft demand letter" bot comment
+          LETTER=$(gh issue view "$ISSUE_NUMBER" \
+            --repo "$GITHUB_REPOSITORY" \
+            --json comments \
+            --jq '[.comments[] | select(.body | contains("Draft demand letter"))] | last | .body // ""')
+          {
+            echo "DRAFT_LETTER<<HEREDOC_EOF"
+            echo "$LETTER"
+            echo "HEREDOC_EOF"
+          } >> "$GITHUB_ENV"
+
+      - name: Run airline adapter
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+          NACL_PRIVATE_KEY: ${{ secrets.NACL_PRIVATE_KEY }}
+          PLAYWRIGHT_SCREENSHOT_DIR: /tmp/screenshots
+        run: |
+          mkdir -p /tmp/screenshots
+          python scripts/run_submit.py
+
+      - name: Upload screenshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-screenshots-${{ github.event.issue.number }}
+          path: /tmp/screenshots/
+          retention-days: 7

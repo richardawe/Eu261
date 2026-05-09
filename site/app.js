@@ -1,23 +1,28 @@
 /**
  * EU261 Claim Agent — intake form logic.
  *
- * On submit the form does NOT post to a server.  Instead it builds a
- * GitHub "new issue" deep-link with the claim body pre-filled.  The user
- * arrives on GitHub, reviews the pre-populated issue, and clicks Submit.
- *
- * Structured PII fields (name, email, booking ref) are included in the
- * body because the intake workflow rewrites the issue immediately on open,
- * encrypting those fields before any human can see them in the GitHub UI.
+ * On submit the form POSTs directly to the GitHub Issues REST API using a
+ * fine-grained PAT (issues:write only).  No redirect, no GitHub login
+ * required from the user.  The intake workflow picks up the new issue and
+ * encrypts PII within seconds.
  */
 
 /** GitHub repository — update this if you fork the project. */
 const GITHUB_REPO = "richardawe/Eu261";
-const GITHUB_ISSUES_URL = `https://github.com/${GITHUB_REPO}/issues/new`;
 
-/** Labels applied to every claim issue. */
+/**
+ * Fine-grained PAT with issues:write on this repo only.
+ * Generate at: GitHub → Settings → Developer settings → Fine-grained tokens
+ * Required permission: Repository > Issues > Read and write
+ * Replace this placeholder before deploying.
+ */
+const GITHUB_SUBMISSIONS_TOKEN = "REPLACE_WITH_FINE_GRAINED_PAT";
+
+/** Label applied to every claim issue — triggers the intake workflow. */
 const CLAIM_LABELS = "claim";
 
-/** Maximum characters we'll put in a GitHub URL body before truncating. */
+/** Kept for the manual-fallback URL in the error state. */
+const GITHUB_ISSUES_URL = `https://github.com/${GITHUB_REPO}/issues/new`;
 const MAX_BODY_CHARS = 6000;
 
 // ─────────────────────────────────────────────
@@ -37,7 +42,7 @@ function wireIntakeForm() {
   const form = document.getElementById("claim-form");
   if (!form) return;
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
     clearErrors(form);
 
@@ -55,19 +60,71 @@ function wireIntakeForm() {
     const data = collectFormData(form);
     const title = buildTitle(data);
     const body = buildBody(data);
-    const url = buildGitHubURL(title, body);
 
-    // In test environments the form exposes the URL via data attribute
-    // so Playwright can inspect it without triggering navigation.
-    form.dataset.generatedUrl = url;
+    // Expose for tests (no navigation side-effect in jsdom).
+    form.dataset.generatedTitle = title;
+    form.dataset.generatedBody = body;
 
-    window.location.href = url;
+    const btn = form.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    btn.textContent = "Submitting…";
+
+    try {
+      const res = await fetch(
+        `https://api.github.com/repos/${GITHUB_REPO}/issues`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${GITHUB_SUBMISSIONS_TOKEN}`,
+            "Content-Type": "application/json",
+            Accept: "application/vnd.github+json",
+            "X-GitHub-Api-Version": "2022-11-28",
+          },
+          body: JSON.stringify({ title, body, labels: [CLAIM_LABELS] }),
+        }
+      );
+
+      if (!res.ok) {
+        const detail = await res.text().catch(() => "");
+        throw new Error(`GitHub API returned ${res.status}. ${detail}`.trim());
+      }
+
+      const issue = await res.json();
+      form.hidden = true;
+      showSuccess(issue.number, issue.html_url);
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = "Submit claim";
+      const fallbackUrl = buildGitHubURL(title, body);
+      showSubmitError(err.message, fallbackUrl);
+    }
   });
 }
 
-/**
- * Show/hide optional fields that depend on the chosen event type.
- */
+function showSuccess(issueNumber, issueUrl) {
+  const el = document.getElementById("claim-success");
+  if (!el) return;
+  el.querySelector("#claim-issue-number").textContent = issueNumber;
+  const link = el.querySelector("#claim-issue-link");
+  link.href = issueUrl;
+  link.textContent = `#${issueNumber}`;
+  el.hidden = false;
+}
+
+function showSubmitError(message, fallbackUrl) {
+  const el = document.getElementById("claim-error");
+  if (!el) return;
+  const msgEl = el.querySelector("#claim-error-message");
+  if (msgEl) msgEl.textContent = message;
+  const fallback = el.querySelector("#claim-fallback-link");
+  if (fallback) fallback.href = fallbackUrl;
+  el.hidden = false;
+}
+
+// ─────────────────────────────────────────────
+// Event type toggle
+// ─────────────────────────────────────────────
+
 function wireEventTypeToggle() {
   const select = document.getElementById("event_type");
   if (!select) return;
@@ -81,14 +138,13 @@ function wireEventTypeToggle() {
   };
 
   select.addEventListener("change", toggle);
-  toggle(); // run on page load
+  toggle();
 }
 
 function setVisible(id, visible) {
   const el = document.getElementById(id);
   if (!el) return;
   el.hidden = !visible;
-  // Remove required from hidden fields so validation still passes
   el.querySelectorAll("[data-conditionally-required]").forEach((inp) => {
     inp.required = visible;
   });
@@ -160,11 +216,9 @@ function collectFormData(form) {
   const checked = (name) => form.elements[name]?.checked ?? false;
 
   return {
-    // PII (will be encrypted by intake workflow)
     passenger_name: get("passenger_name"),
     email: get("email"),
     booking_reference: get("booking_reference"),
-    // Structured non-PII
     carrier_iata: get("carrier_iata").toUpperCase(),
     flight_number: get("flight_number").toUpperCase(),
     scheduled_departure_utc: get("scheduled_departure_utc"),
@@ -240,6 +294,7 @@ function buildBody(d) {
   return lines.join("\n");
 }
 
+/** Builds a manual-fallback GitHub URL (used in the error state only). */
 function buildGitHubURL(title, body) {
   const truncatedBody = body.length > MAX_BODY_CHARS
     ? body.slice(0, MAX_BODY_CHARS) + "\n\n<!-- body truncated; please add the rest manually -->"
@@ -254,7 +309,6 @@ function buildGitHubURL(title, body) {
 }
 
 // Expose pure functions for unit testing (jsdom / Node.js test runner).
-// These are no-ops in production since browsers don't expose window globally.
 if (typeof window !== "undefined") {
   window.buildTitle = buildTitle;
   window.buildBody = buildBody;
