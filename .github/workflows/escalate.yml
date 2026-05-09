@@ -1,0 +1,55 @@
+name: Escalate — submit claim to National Enforcement Body
+
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  escalate:
+    if: github.event.label.name == 'state:airline-rejected'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -e ".[dev]"
+
+      - name: Install Playwright browser
+        run: playwright install chromium --with-deps
+
+      - name: Escalate to NEB
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+          NACL_PRIVATE_KEY: ${{ secrets.NACL_PRIVATE_KEY }}
+          PLAYWRIGHT_SCREENSHOT_DIR: /tmp/screenshots
+        run: |
+          mkdir -p /tmp/screenshots
+          python scripts/run_escalate.py
+
+      - name: Write claim status to gh-pages
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          CURRENT_STATE: state:escalated-neb
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/write_status.py
+
+      - name: Upload screenshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-screenshots-neb-${{ github.event.issue.number }}
+          path: /tmp/screenshots/
+          retention-days: 7
