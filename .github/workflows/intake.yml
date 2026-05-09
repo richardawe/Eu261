@@ -2,12 +2,15 @@ name: Intake — encrypt PII and mark intake-complete
 
 on:
   issues:
-    types: [labeled]
+    # opened: issue created via deep-link with labels= in URL (our intake form)
+    # labeled: label added manually to an existing issue
+    types: [opened, labeled]
 
 jobs:
   intake:
-    # Only run when the "claim" label is added
-    if: github.event.label.name == 'claim'
+    if: |
+      (github.event.action == 'opened' && contains(github.event.issue.labels.*.name, 'claim')) ||
+      (github.event.action == 'labeled' && github.event.label.name == 'claim')
     runs-on: ubuntu-latest
     permissions:
       issues: write
