@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Start a claim — EU261 Claim Agent</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="container">
+    <nav>
+      <ul><li><a href="index.html"><strong>EU261 Claim Agent</strong></a></li></ul>
+      <ul>
+        <li><a href="status.html">Track claim</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+    <hgroup>
+      <h1>Start your claim</h1>
+      <p>Fill in the details below. This form opens a pre-filled GitHub issue for you to review and submit — we never see your data before you click Submit on GitHub.</p>
+    </hgroup>
+
+    <div class="pii-notice" role="note">
+      🔒 Fields marked <strong>PII</strong> (name, email, booking reference) are included in the issue body but are immediately encrypted by our intake workflow — within seconds of the issue opening, they are replaced with ciphertext. Only the maintainers with the private key can decrypt them.
+    </div>
+
+    <form id="claim-form" novalidate>
+
+      <!-- ── Section 1: Flight details ── -->
+      <fieldset class="form-section">
+        <legend><h3>Flight details</h3></legend>
+
+        <div class="grid">
+          <label>
+            Airline IATA code
+            <input
+              id="carrier_iata"
+              name="carrier_iata"
+              type="text"
+              placeholder="e.g. U2, FR, BA"
+              pattern="[A-Za-z0-9]{2,3}"
+              maxlength="3"
+              required
+              autocomplete="off"
+            />
+            <small>2–3 character code. <a href="https://www.iata.org/en/publications/directories/code-search/" target="_blank" rel="noopener">Look up code →</a></small>
+          </label>
+
+          <label>
+            Flight number
+            <input
+              id="flight_number"
+              name="flight_number"
+              type="text"
+              placeholder="e.g. EZY1234"
+              pattern="[A-Za-z0-9]{2,8}"
+              required
+              autocomplete="off"
+            />
+          </label>
+        </div>
+
+        <div class="grid">
+          <label>
+            Departure airport (IATA)
+            <input
+              id="departure_iata"
+              name="departure_iata"
+              type="text"
+              placeholder="e.g. LHR"
+              pattern="[A-Za-z]{3}"
+              maxlength="3"
+              required
+              autocomplete="off"
+            />
+          </label>
+
+          <label>
+            Arrival airport (IATA)
+            <input
+              id="arrival_iata"
+              name="arrival_iata"
+              type="text"
+              placeholder="e.g. AMS"
+              pattern="[A-Za-z]{3}"
+              maxlength="3"
+              required
+              autocomplete="off"
+            />
+          </label>
+        </div>
+
+        <div class="grid">
+          <label>
+            Scheduled departure (UTC)
+            <input
+              id="scheduled_departure_utc"
+              name="scheduled_departure_utc"
+              type="datetime-local"
+              required
+            />
+          </label>
+
+          <label>
+            Scheduled arrival (UTC)
+            <input
+              id="scheduled_arrival_utc"
+              name="scheduled_arrival_utc"
+              type="datetime-local"
+              required
+            />
+          </label>
+        </div>
+      </fieldset>
+
+      <!-- ── Section 2: What happened ── -->
+      <fieldset class="form-section">
+        <legend><h3>What happened</h3></legend>
+
+        <label>
+          Type of disruption
+          <select id="event_type" name="event_type" required>
+            <option value="" disabled selected>Select…</option>
+            <option value="delay">Flight delayed (arrived 3+ hours late)</option>
+            <option value="cancellation">Flight cancelled</option>
+            <option value="denied_boarding">Denied boarding (involuntary)</option>
+            <option value="rebooked_earlier">Flight moved earlier without adequate notice</option>
+          </select>
+        </label>
+
+        <!-- Delay-specific -->
+        <div id="actual-arrival-group" hidden>
+          <label>
+            Actual arrival time (UTC)
+            <input
+              id="actual_arrival_utc"
+              name="actual_arrival_utc"
+              type="datetime-local"
+              data-conditionally-required
+            />
+            <small>When did the plane actually arrive at the gate?</small>
+          </label>
+        </div>
+
+        <!-- Cancellation-specific -->
+        <div id="cancellation-notice-group" hidden>
+          <label>
+            Days' notice of cancellation
+            <input
+              id="cancellation_notice_days"
+              name="cancellation_notice_days"
+              type="number"
+              min="0"
+              max="365"
+              placeholder="e.g. 3"
+              data-conditionally-required
+            />
+            <small>How many days before departure did you find out?</small>
+          </label>
+        </div>
+
+        <!-- Rebooking info (cancellation + rebooked_earlier) -->
+        <div id="rebooked-group" hidden>
+          <div class="grid">
+            <label>
+              Rebooked departure (UTC) <em>(optional)</em>
+              <input
+                id="rebooked_departure_utc"
+                name="rebooked_departure_utc"
+                type="datetime-local"
+              />
+            </label>
+
+            <label>
+              Rebooked arrival (UTC) <em>(optional)</em>
+              <input
+                id="rebooked_arrival_utc"
+                name="rebooked_arrival_utc"
+                type="datetime-local"
+              />
+            </label>
+          </div>
+        </div>
+
+        <label>
+          What happened — in your own words
+          <textarea
+            id="narrative"
+            name="narrative"
+            rows="5"
+            placeholder="Describe what happened: what the airline told you, how long the delay was, whether you were offered a rebook, etc. Don't worry about legal language — just tell us what you experienced."
+            required
+            minlength="20"
+          ></textarea>
+        </label>
+      </fieldset>
+
+      <!-- ── Section 3: Your details (PII) ── -->
+      <fieldset class="form-section">
+        <legend><h3>Your details <span class="pii-tag">(PII)</span></h3></legend>
+
+        <p class="pii-notice">These fields are included in the issue body so the claim workflow can draft the letter in your name. They are encrypted within seconds of the issue opening.</p>
+
+        <div class="grid">
+          <label>
+            Full name (as on booking)
+            <input
+              id="passenger_name"
+              name="passenger_name"
+              type="text"
+              placeholder="Jane Smith"
+              required
+              autocomplete="name"
+            />
+          </label>
+
+          <label>
+            Email address
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="jane@example.com"
+              required
+              autocomplete="email"
+            />
+            <small>We'll send you status updates at this address.</small>
+          </label>
+        </div>
+
+        <label>
+          Booking reference
+          <input
+            id="booking_reference"
+            name="booking_reference"
+            type="text"
+            placeholder="e.g. ABC123"
+            required
+            autocomplete="off"
+          />
+        </label>
+      </fieldset>
+
+      <!-- ── Consent ── -->
+      <fieldset class="form-section">
+        <legend><h3>Consent</h3></legend>
+
+        <label>
+          <input id="consent" name="consent" type="checkbox" required />
+          I have read the <a href="https://github.com/richardawe/Eu261/blob/main/PRIVACY.md" target="_blank">Privacy Policy</a> and <a href="https://github.com/richardawe/Eu261/blob/main/TERMS.md" target="_blank">Terms</a>. I understand this is not legal advice, no fees are charged, and I am filing this claim in my own name.
+        </label>
+      </fieldset>
+
+      <button type="submit">Review &amp; submit on GitHub →</button>
+      <p><small>Clicking the button opens a pre-filled GitHub issue. You must be signed into GitHub to submit it.</small></p>
+
+    </form>
+  </main>
+
+  <footer class="container">
+    <small>
+      EU261 Claim Agent · <a href="https://github.com/richardawe/Eu261" target="_blank">Open source</a> · Not legal advice · No fees
+    </small>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

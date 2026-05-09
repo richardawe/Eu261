@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claim status — EU261 Claim Agent</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="container">
+    <nav>
+      <ul><li><a href="index.html"><strong>EU261 Claim Agent</strong></a></li></ul>
+      <ul>
+        <li><a href="intake.html">New claim</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1>Claim status</h1>
+
+    <!-- Lookup form — shown when no ?claim= param -->
+    <section id="lookup-section">
+      <p>Enter your claim number (the GitHub issue number you received when you filed).</p>
+      <form id="lookup-form">
+        <div class="grid" style="align-items:end;">
+          <label>
+            Claim number
+            <input
+              id="claim-input"
+              name="claim"
+              type="number"
+              min="1"
+              placeholder="e.g. 42"
+              required
+            />
+          </label>
+          <div>
+            <button type="submit">Look up</button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- Status display — shown once data is loaded -->
+    <section id="status-section" hidden aria-live="polite">
+
+      <div id="status-banner" class="banner" hidden></div>
+
+      <article id="status-card" hidden>
+        <header>
+          <h2 id="status-flight"></h2>
+          <p id="status-state-label"></p>
+        </header>
+
+        <h3>Timeline</h3>
+        <ul class="timeline" id="status-timeline"></ul>
+
+        <footer>
+          <a id="status-github-link" href="#" target="_blank" rel="noopener">
+            View full issue on GitHub →
+          </a>
+        </footer>
+      </article>
+
+    </section>
+
+    <!-- Loading indicator -->
+    <div id="status-loading" hidden aria-busy="true" aria-label="Loading claim status…">
+      <p>Loading…</p>
+    </div>
+
+  </main>
+
+  <footer class="container">
+    <small>
+      EU261 Claim Agent · <a href="https://github.com/richardawe/Eu261" target="_blank">Open source</a> · Not legal advice · No fees
+    </small>
+  </footer>
+
+  <script src="status.js"></script>
+</body>
+</html>

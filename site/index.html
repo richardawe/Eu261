@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EU261 Claim Agent</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="container">
+    <nav>
+      <ul><li><strong>EU261 Claim Agent</strong></li></ul>
+      <ul>
+        <li><a href="intake.html">New claim</a></li>
+        <li><a href="status.html">Track claim</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <hgroup>
+        <h1>Flight delayed or cancelled?</h1>
+        <p>EU Regulation 261/2004 entitles you to up to €600 compensation. We file the claim for you — for free.</p>
+      </hgroup>
+      <a href="intake.html" role="button" class="cta-button">Check if I'm eligible →</a>
+    </section>
+
+    <section>
+      <div class="grid">
+        <div class="feature-card">
+          <h3>🔒 No fees, ever</h3>
+          <p>This is a free, open-source tool. We charge nothing. We take no commission. You keep 100% of any compensation.</p>
+        </div>
+        <div class="feature-card">
+          <h3>⚖️ Deterministic eligibility</h3>
+          <p>Your eligibility is decided by code running the EU261 rules — not by an AI that might get it wrong. Every decision cites the exact article it applied.</p>
+        </div>
+        <div class="feature-card">
+          <h3>✅ You stay in control</h3>
+          <p>Nothing is submitted to an airline without you reading and approving the claim letter first. No surprises.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>How it works</h2>
+      <ol class="steps">
+        <li>
+          <strong>Tell us about your flight</strong>
+          <p>Fill in a short form — flight number, dates, airports, and what happened. Takes about 2 minutes.</p>
+        </li>
+        <li>
+          <strong>We check eligibility automatically</strong>
+          <p>Our rules engine checks your flight against EU261/2004. You get a plain-English result with the exact rule that applies, usually within 2 minutes.</p>
+        </li>
+        <li>
+          <strong>Review your claim letter</strong>
+          <p>If eligible, we draft a formal claim letter citing the regulation and the exact amount due. You read it and approve before anything is sent.</p>
+        </li>
+        <li>
+          <strong>We handle the airline</strong>
+          <p>We submit your claim and chase the airline. If they reject or go silent for 28 days, we escalate to the national enforcement body.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Am I covered?</h2>
+      <p>EU261 applies if <strong>any</strong> of these is true:</p>
+      <ul>
+        <li>Your flight <strong>departed from</strong> an airport in the EU, Norway, or Iceland (any airline)</li>
+        <li>Your flight <strong>arrived at</strong> an EU/EEA airport <strong>and</strong> your carrier is EU-licensed (e.g. British Airways, Ryanair, Lufthansa)</li>
+      </ul>
+      <p>You may be owed compensation if:</p>
+      <ul>
+        <li>Your flight arrived <strong>3 or more hours late</strong></li>
+        <li>Your flight was <strong>cancelled</strong> with less than 14 days' notice</li>
+        <li>You were <strong>denied boarding</strong> involuntarily</li>
+      </ul>
+      <details>
+        <summary>What about UK flights post-Brexit?</summary>
+        <p>The UK has incorporated EU261 into domestic law as <em>UK261</em>. Flights departing UK airports or arriving at UK airports on UK carriers are covered. We treat UK airports as in-scope.</p>
+      </details>
+    </section>
+
+    <section class="disclaimer">
+      <h2>Important: what this is not</h2>
+      <ul>
+        <li><strong>Not legal advice.</strong> This tool applies the regulation mechanically. For complex disputes you should consult a lawyer or your national enforcement body.</li>
+        <li><strong>Not a claims management company.</strong> We don't take a cut of your compensation. We're an open-source tool.</li>
+        <li><strong>Not a guarantee.</strong> Airlines sometimes reject valid claims. We escalate, but we can't guarantee payment.</li>
+      </ul>
+      <p>See <a href="https://github.com/richardawe/Eu261/blob/main/PRIVACY.md" target="_blank">Privacy Policy</a> and <a href="https://github.com/richardawe/Eu261/blob/main/TERMS.md" target="_blank">Terms</a>.</p>
+    </section>
+  </main>
+
+  <footer class="container">
+    <small>
+      EU261 Claim Agent is open source (<a href="https://github.com/richardawe/Eu261" target="_blank">GitHub</a>) · MIT Licence · Not legal advice · No fees
+    </small>
+  </footer>
+</body>
+</html>
