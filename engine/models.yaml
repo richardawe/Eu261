@@ -1,0 +1,15 @@
+# Model assignments for OpenRouter calls.
+# All models must be on the free tier.  Verify availability at:
+#   https://openrouter.ai/models?q=free
+#
+# Keys:
+#   extraction.primary   — lightweight model for initial fact extraction
+#   extraction.fallback  — stronger model used on validation failure
+#   drafting.primary     — used in Phase 5 claim-letter drafting
+
+extraction:
+  primary: "google/gemma-2-9b-it:free"
+  fallback: "meta-llama/llama-3.1-8b-instruct:free"
+
+drafting:
+  primary: "meta-llama/llama-3.1-8b-instruct:free"
