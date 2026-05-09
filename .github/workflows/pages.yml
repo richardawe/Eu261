@@ -31,6 +31,11 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      - name: Inject submission token
+        env:
+          SUBMISSIONS_TOKEN: ${{ vars.GITHUB_SUBMISSIONS_TOKEN }}
+        run: sed -i "s/REPLACE_WITH_FINE_GRAINED_PAT/${SUBMISSIONS_TOKEN}/" site/app.js
+
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:
