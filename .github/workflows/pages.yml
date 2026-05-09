@@ -33,7 +33,7 @@ jobs:
 
       - name: Inject submission token
         env:
-          SUBMISSIONS_TOKEN: ${{ vars.GITHUB_SUBMISSIONS_TOKEN }}
+          SUBMISSIONS_TOKEN: ${{ vars.SUBMISSIONS_TOKEN }}
         run: sed -i "s/REPLACE_WITH_FINE_GRAINED_PAT/${SUBMISSIONS_TOKEN}/" site/app.js
 
       - name: Upload site artifact
