@@ -1,0 +1,161 @@
+version: "1.0"
+regulation: "EC 261/2004"
+effective:
+  from: "2005-02-17"
+  to: null  # currently in force
+
+# Article 3 — Scope of application
+# The flight is in scope if ANY of these conditions is true.
+scope:
+  applies_if_any:
+    - id: "scope.departure_eu"
+      departure_region: "EU"
+      description: "Departing from an EU/EEA/UK airport (any carrier)"
+      legal_basis: "Article 3(1)(a)"
+    - id: "scope.arrival_eu_eu_carrier"
+      arrival_region: "EU"
+      carrier_is_eu: true
+      description: "Arriving at EU/EEA/UK airport on an EU Community carrier"
+      legal_basis: "Article 3(1)(b)"
+
+# Qualifying events and their conditions
+qualifying_events:
+  delay:
+    id: "event.delay"
+    # Per CJEU Sturgeon ruling, a delay ≥3h at destination gives same compensation right as cancellation
+    min_arrival_delay_hours: 3
+    measured: "actual_arrival vs scheduled_arrival at final destination"
+    legal_basis: "CJEU C-402/07 and C-432/07 (Sturgeon & Böck)"
+
+  cancellation:
+    id: "event.cancellation"
+    # Article 5(1)(c): carrier NOT obliged to pay compensation if one of these applies
+    not_eligible_if:
+      - id: "cancel.notice_14d"
+        notice_days_gte: 14
+        description: "Passenger informed ≥14 days before scheduled departure"
+        legal_basis: "Article 5(1)(c)(i)"
+      - id: "cancel.notice_7_13d_rebooked"
+        notice_days_gte: 7
+        notice_days_lt: 14
+        rebooked_departs_hours_early_max: 2
+        rebooked_arrives_hours_late_max: 4
+        description: "7–13 days notice AND rebooked: departs ≤2h early, arrives ≤4h late"
+        legal_basis: "Article 5(1)(c)(ii)"
+      - id: "cancel.notice_lt7d_rebooked"
+        notice_days_lt: 7
+        rebooked_departs_hours_early_max: 1
+        rebooked_arrives_hours_late_max: 2
+        description: "<7 days notice AND rebooked: departs ≤1h early, arrives ≤2h late"
+        legal_basis: "Article 5(1)(c)(iii)"
+
+  denied_boarding:
+    id: "event.denied_boarding"
+    volunteers_must_be_solicited_first: true
+    description: "Involuntary denied boarding after volunteers solicited"
+    legal_basis: "Article 4"
+
+  rebooked_earlier:
+    id: "event.rebooked_earlier"
+    min_hours_departure_earlier: 2
+    description: "Flight advanced ≥2h without adequate notice; treated as cancellation"
+    legal_basis: "Article 5 by analogy; CJEU December 2021 guidance"
+
+# Article 7 — Right to compensation (amounts in EUR)
+amounts_eur:
+  bands:
+    - id: "amount.band1"
+      label: "short_haul"
+      max_distance_km: 1500
+      amount_eur: 250
+      description: "All flights ≤1500 km"
+      legal_basis: "Article 7(1)(a)"
+    - id: "amount.band2_intra_eu"
+      label: "medium_intra_eu"
+      min_distance_km: 1501
+      intra_eu_only: true
+      amount_eur: 400
+      description: "Intra-EU flights >1500 km"
+      legal_basis: "Article 7(1)(b) first indent"
+    - id: "amount.band2_extra_eu"
+      label: "medium_extra_eu"
+      min_distance_km: 1501
+      max_distance_km: 3500
+      intra_eu_only: false
+      amount_eur: 400
+      description: "Extra-EU flights 1500–3500 km"
+      legal_basis: "Article 7(1)(b) second indent"
+    - id: "amount.band3"
+      label: "long_haul"
+      min_distance_km: 3501
+      intra_eu_only: false
+      amount_eur: 600
+      description: "Extra-EU flights >3500 km"
+      legal_basis: "Article 7(1)(c)"
+
+  # Article 7(2): 50% reduction if re-routed and arrives within window
+  reduction_50pct:
+    applies_to_events: ["cancellation", "rebooked_earlier"]
+    description: "Half compensation if offered re-routing and arrives within time limit"
+    legal_basis: "Article 7(2)"
+    thresholds:
+      - band_label: "short_haul"
+        max_extra_arrival_hours: 2
+      - band_label: "medium_intra_eu"
+        max_extra_arrival_hours: 3
+      - band_label: "medium_extra_eu"
+        max_extra_arrival_hours: 3
+      - band_label: "long_haul"
+        max_extra_arrival_hours: 4
+
+# Article 5(3) — Extraordinary circumstances
+# If the airline can prove the event was caused by extraordinary circumstances
+# that could not have been avoided even if all reasonable measures had been taken,
+# NO compensation is owed.
+extraordinary_circumstances_excluded:
+  - id: "ec.weather"
+    category: "weather"
+    examples:
+      - "severe storm"
+      - "dense fog below minima"
+      - "lightning strike at airport"
+      - "volcanic ash"
+    note: >
+      Routine adverse weather that the airline should plan for does NOT qualify.
+      Must be genuinely unexpected and unavoidable.
+  - id: "ec.atc"
+    category: "air_traffic_control"
+    examples:
+      - "ATC strike"
+      - "ATC capacity restriction"
+      - "slot shortage due to external event"
+  - id: "ec.security"
+    category: "security"
+    examples:
+      - "bomb threat"
+      - "airport security closure"
+      - "government-mandated no-fly zone"
+  - id: "ec.political"
+    category: "political_instability"
+    examples:
+      - "civil unrest at destination"
+      - "sudden travel ban"
+  - id: "ec.hidden_defect"
+    category: "hidden_manufacturing_defect"
+    note: >
+      Routine technical faults do NOT qualify (CJEU C-549/07 Wallentin-Hermann).
+      Only genuine hidden defects outside the airline's control may qualify
+      (CJEU C-257/14 van der Lans, though ruled against airline there).
+  - id: "ec.bird_strike"
+    category: "bird_strike"
+    note: "Generally qualifies as extraordinary (CJEU C-315/15 Pešková)."
+  # NOT extraordinary circumstances per CJEU case law:
+  # - Airline staff strikes (C-28/20 Airhelp v Norse Atlantic)
+  # - Ordinary technical malfunctions (C-549/07 Wallentin-Hermann)
+  # - Staff shortages / scheduling problems
+
+claim_window:
+  description: >
+    The limitation period for filing a compensation claim varies by country.
+    See limitation-by-country.yaml for jurisdiction-specific periods.
+  reference: "limitation-by-country.yaml"

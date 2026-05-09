@@ -1,0 +1,10 @@
+# PLACEHOLDER — EU261 revision currently in trilogue (as of 2024)
+# This file will be populated once the revised regulation is finalised.
+# Expected changes include: revised distance bands, updated amounts for inflation,
+# clearer extraordinary circumstances definition, digital passenger rights.
+version: "2.0-draft"
+regulation: "EC 261/2004 (revised — DRAFT)"
+effective:
+  from: null  # not yet in force
+  to: null
+status: "trilogue — do not use for live decisions"

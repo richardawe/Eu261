@@ -1,0 +1,16 @@
+{
+  "flight_carrier_iata": "U2",
+  "flight_number": "U21234",
+  "scheduled_departure_utc": "2024-06-01T10:00:00+00:00",
+  "scheduled_arrival_utc": "2024-06-01T11:30:00+00:00",
+  "actual_arrival_utc": "2024-06-01T14:45:00+00:00",
+  "departure_iata": "LHR",
+  "arrival_iata": "AMS",
+  "event_type": "delay",
+  "is_eu_carrier": false,
+  "extraordinary_circumstance_confirmed": false,
+  "extraordinary_circumstance_claimed": null,
+  "cancellation_notice_days": null,
+  "rebooked_departure_utc": null,
+  "rebooked_arrival_utc": null
+}

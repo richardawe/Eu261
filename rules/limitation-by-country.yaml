@@ -1,0 +1,154 @@
+# Statutory limitation periods for EU261 compensation claims.
+# Period starts from the date of the flight (scheduled departure).
+# "years" is the number of years a claimant has to file.
+# Source: national civil procedure codes / consumer protection legislation.
+
+countries:
+  - country: "DE"
+    name: "Germany"
+    years: 3
+    notes: >
+      §195 BGB (standard limitation). Starts 31 December of the year in which
+      the right arose. Effectively up to ~4 calendar years from the flight.
+    legal_basis: "§195 Bürgerliches Gesetzbuch"
+
+  - country: "FR"
+    name: "France"
+    years: 5
+    notes: >
+      Article L.218-2 Code de la consommation (5 years for consumer actions
+      against professionals). Some courts apply 2-year transport convention
+      period — claim within 2 years to be safe.
+    legal_basis: "Article L.218-2 Code de la consommation"
+    conservative_years: 2
+
+  - country: "ES"
+    name: "Spain"
+    years: 5
+    notes: >
+      Article 1964 Código Civil (personal actions not otherwise specified).
+      AESA regulates; file complaint with AESA first.
+    legal_basis: "Article 1964 Código Civil"
+
+  - country: "IT"
+    name: "Italy"
+    years: 2
+    notes: >
+      Article 944 Codice della Navigazione applies a 2-year period for air
+      transport claims.
+    legal_basis: "Article 944 Codice della Navigazione"
+
+  - country: "NL"
+    name: "Netherlands"
+    years: 2
+    notes: >
+      Article 8:1757 BW (Burgerlijk Wetboek) — 2 years from date of flight.
+    legal_basis: "Article 8:1757 Burgerlijk Wetboek"
+
+  - country: "IE"
+    name: "Ireland"
+    years: 6
+    notes: >
+      Statute of Limitations 1957 (contract claims, 6 years).
+      IAA is the national enforcement body.
+    legal_basis: "Statute of Limitations 1957, s.11(1)(a)"
+
+  - country: "GB"
+    name: "United Kingdom"
+    years: 6
+    notes: >
+      Limitation Act 1980 s.5 (contract, 6 years from breach).
+      UK261 mirrors EU261 post-Brexit. CAA is the enforcement body.
+      Scotland: 5 years (Prescription and Limitation (Scotland) Act 1973).
+    legal_basis: "Limitation Act 1980 s.5"
+    scotland_years: 5
+
+  - country: "BE"
+    name: "Belgium"
+    years: 1
+    notes: >
+      Article 24 of the Montreal Convention as implemented: 2 years.
+      Belgian courts also apply the general 10-year prescription (pre-2014
+      cases) or 5 years (post-reform). File early — courts diverge.
+    legal_basis: "Article 29 Montreal Convention / Article 2262bis BW"
+    conservative_years: 1
+
+  - country: "SE"
+    name: "Sweden"
+    years: 3
+    notes: >
+      General 3-year limitation under Preskriptionslag (1981:130).
+    legal_basis: "Preskriptionslag (1981:130) §2"
+
+  - country: "PL"
+    name: "Poland"
+    years: 3
+    notes: >
+      Article 118 KC (Kodeks cywilny) — general 6 years; for consumer
+      claims against business, 3 years applies. File within 3 years.
+    legal_basis: "Article 118 Kodeks cywilny"
+
+  - country: "AT"
+    name: "Austria"
+    years: 3
+    notes: >
+      §1478 ABGB — general 3-year limitation for contractual claims.
+    legal_basis: "§1478 Allgemeines bürgerliches Gesetzbuch"
+
+  - country: "PT"
+    name: "Portugal"
+    years: 3
+    notes: >
+      Article 309 Código Civil — general 20-year period; transport claims
+      typically 3 years under special provisions. Practical limit: 3 years.
+    legal_basis: "Article 309 Código Civil"
+
+  - country: "GR"
+    name: "Greece"
+    years: 5
+    notes: >
+      Article 249 Civil Code — general 20 years; commercial claims 5 years.
+    legal_basis: "Article 249 Greek Civil Code"
+
+  - country: "DK"
+    name: "Denmark"
+    years: 3
+    notes: >
+      Forældelseloven §3 — general 3-year limitation.
+    legal_basis: "Forældelseloven §3 stk. 1"
+
+  - country: "FI"
+    name: "Finland"
+    years: 3
+    notes: >
+      Laki velan vanhentumisesta (728/2003) §4 — 3 years general.
+    legal_basis: "Laki velan vanhentumisesta (728/2003) §4"
+
+  - country: "HU"
+    name: "Hungary"
+    years: 5
+    notes: >
+      Civil Code §6:22 — general 5-year limitation.
+    legal_basis: "Polgári Törvénykönyv §6:22"
+
+  - country: "CZ"
+    name: "Czech Republic"
+    years: 3
+    notes: >
+      Nový občanský zákoník §629 — general 3-year subjective period.
+    legal_basis: "Zákon č. 89/2012 Sb. §629"
+
+  - country: "RO"
+    name: "Romania"
+    years: 3
+    notes: >
+      Codul civil art. 2517 — general 3-year prescription.
+    legal_basis: "Codul civil art. 2517"
+
+  - country: "NO"
+    name: "Norway"
+    years: 3
+    notes: >
+      Foreldelsesloven §3 — general 3-year limitation. Norway applies EU261
+      via EEA Agreement.
+    legal_basis: "Lov om foreldelse av fordringer §3 nr. 1"
