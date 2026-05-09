@@ -1,0 +1,32 @@
+name: Eligibility — evaluate claim and post decision
+
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  eligibility:
+    # Only run when intake is complete
+    if: github.event.label.name == 'state:intake-complete'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -e ".[dev]"
+
+      - name: Evaluate eligibility and post decision
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/run_eligibility.py
