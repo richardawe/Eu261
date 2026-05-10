@@ -1,25 +1,29 @@
 /**
  * EU261 Claim Agent — intake form logic.
  *
- * On submit the form POSTs directly to the GitHub Issues REST API using a
- * fine-grained PAT (issues:write only).  No redirect, no GitHub login
- * required from the user.  The intake workflow picks up the new issue and
- * encrypts PII within seconds.
+ * On submit the form dispatches a workflow_dispatch event to GitHub Actions.
+ * The claim-receiver workflow (which runs with GITHUB_TOKEN server-side)
+ * creates the issue.  The browser then polls the public issues API to
+ * retrieve the issue number and show it to the user.
+ *
+ * Token required: fine-grained PAT, permission "Actions: Read and write" only.
+ * Worst-case if leaked: attacker can trigger/cancel workflow runs — cannot
+ * push code, cannot read secrets, cannot create issues directly.
  */
 
 /** GitHub repository — update this if you fork the project. */
 const GITHUB_REPO = "richardawe/Eu261";
 
 /**
- * Fine-grained PAT with issues:write on this repo only.
+ * Fine-grained PAT with actions:write on this repo only.
  * Generate at: GitHub → Settings → Developer settings → Fine-grained tokens
- * Required permission: Repository > Issues > Read and write
- * Replace this placeholder before deploying.
+ * Required permission: Repository > Actions > Read and write
+ * Replace this placeholder before deploying (injected by pages.yml at build time).
  */
 const GITHUB_SUBMISSIONS_TOKEN = "REPLACE_WITH_FINE_GRAINED_PAT";
 
-/** Label applied to every claim issue — triggers the intake workflow. */
-const CLAIM_LABELS = "claim";
+/** Branch that holds claim-receiver.yml — update after merging to main. */
+const DISPATCH_REF = "main";
 
 /** Kept for the manual-fallback URL in the error state. */
 const GITHUB_ISSUES_URL = `https://github.com/${GITHUB_REPO}/issues/new`;
@@ -70,8 +74,9 @@ function wireIntakeForm() {
     btn.textContent = "Submitting…";
 
     try {
+      const workflowFile = "claim-receiver.yml";
       const res = await fetch(
-        `https://api.github.com/repos/${GITHUB_REPO}/issues`,
+        `https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/${workflowFile}/dispatches`,
         {
           method: "POST",
           headers: {
@@ -80,18 +85,24 @@ function wireIntakeForm() {
             Accept: "application/vnd.github+json",
             "X-GitHub-Api-Version": "2022-11-28",
           },
-          body: JSON.stringify({ title, body, labels: [CLAIM_LABELS] }),
+          body: JSON.stringify({
+            ref: DISPATCH_REF,
+            inputs: { title, body },
+          }),
         }
       );
 
-      if (!res.ok) {
+      if (res.status !== 204) {
         const detail = await res.text().catch(() => "");
         throw new Error(`GitHub API returned ${res.status}. ${detail}`.trim());
       }
 
-      const issue = await res.json();
       form.hidden = true;
-      showSuccess(issue.number, issue.html_url);
+      showSuccessWaiting();
+      pollForIssue(title).then((issue) => {
+        if (issue) showSuccess(issue.number, issue.html_url);
+        else showSuccessUnknown();
+      });
     } catch (err) {
       btn.disabled = false;
       btn.textContent = "Submit claim";
@@ -101,14 +112,50 @@ function wireIntakeForm() {
   });
 }
 
+function showSuccessWaiting() {
+  const el = document.getElementById("claim-success");
+  if (!el) return;
+  el.querySelector("#claim-success-body").textContent =
+    "Your claim has been received and is being processed. Retrieving your reference number…";
+  el.hidden = false;
+}
+
 function showSuccess(issueNumber, issueUrl) {
   const el = document.getElementById("claim-success");
   if (!el) return;
-  el.querySelector("#claim-issue-number").textContent = issueNumber;
-  const link = el.querySelector("#claim-issue-link");
-  link.href = issueUrl;
-  link.textContent = `#${issueNumber}`;
-  el.hidden = false;
+  const body = el.querySelector("#claim-success-body");
+  body.innerHTML =
+    `Your claim has been logged as <a href="${issueUrl}" target="_blank" rel="noopener">#${issueNumber}</a>. ` +
+    `Bookmark that link to track progress. Your personal details will be encrypted within a few seconds.`;
+}
+
+function showSuccessUnknown() {
+  const el = document.getElementById("claim-success");
+  if (!el) return;
+  el.querySelector("#claim-success-body").innerHTML =
+    `Your claim has been received. Check the ` +
+    `<a href="https://github.com/${GITHUB_REPO}/issues?labels=claim" target="_blank" rel="noopener">issues list</a> ` +
+    `for your reference number — it should appear within 30 seconds.`;
+}
+
+async function pollForIssue(title) {
+  for (let i = 0; i < 8; i++) {
+    await new Promise((r) => setTimeout(r, 3000));
+    try {
+      const r = await fetch(
+        `https://api.github.com/repos/${GITHUB_REPO}/issues` +
+          `?labels=claim&state=open&per_page=10&sort=created&direction=desc`,
+        { headers: { Accept: "application/vnd.github+json" } }
+      );
+      if (!r.ok) continue;
+      const issues = await r.json();
+      const found = issues.find((iss) => iss.title === title);
+      if (found) return found;
+    } catch {
+      continue;
+    }
+  }
+  return null;
 }
 
 function showSubmitError(message, fallbackUrl) {
@@ -303,7 +350,7 @@ function buildGitHubURL(title, body) {
   const params = new URLSearchParams({
     title,
     body: truncatedBody,
-    labels: CLAIM_LABELS,
+    labels: "claim",
   });
   return `${GITHUB_ISSUES_URL}?${params.toString()}`;
 }

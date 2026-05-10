@@ -23,12 +23,11 @@
       <p>Fill in the details below and click Submit. No account required.</p>
     </hgroup>
 
-    <!-- Success state (shown after API call succeeds) -->
+    <!-- Success state (shown after dispatch succeeds; updated with issue # once workflow creates it) -->
     <div id="claim-success" hidden role="alert">
       <article>
         <header><strong>Claim submitted</strong></header>
-        <p>Your claim has been logged as <a id="claim-issue-link" href="#" target="_blank" rel="noopener">#<span id="claim-issue-number"></span></a>. Bookmark that link to track progress.</p>
-        <p>Your personal details will be encrypted within a few seconds by the intake workflow. Only the claim handler can decrypt them.</p>
+        <p id="claim-success-body"></p>
       </article>
     </div>
 
