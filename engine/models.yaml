@@ -9,7 +9,7 @@
 
 extraction:
   primary: "google/gemma-2-9b-it:free"
-  fallback: "meta-llama/llama-3.1-8b-instruct:free"
+  fallback: "openai/gpt-oss-120b:free"
 
 drafting:
-  primary: "meta-llama/llama-3.1-8b-instruct:free"
+  primary: "openai/gpt-oss-120b:free"
