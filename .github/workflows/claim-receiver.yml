@@ -1,0 +1,39 @@
+name: Claim receiver — create issue from form dispatch
+
+on:
+  workflow_dispatch:
+    inputs:
+      title:
+        description: "Issue title"
+        required: true
+      body:
+        description: "Issue body (markdown)"
+        required: true
+
+jobs:
+  create-issue:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Validate payload
+        env:
+          TITLE: ${{ inputs.title }}
+          BODY: ${{ inputs.body }}
+        run: |
+          [ -n "$TITLE" ] && [ -n "$BODY" ] || { echo "::error::Missing title or body"; exit 1; }
+          printf '%s' "$TITLE" | grep -qE '^Claim: ' || { echo "::error::Unexpected title format — rejected"; exit 1; }
+
+      - name: Create claim issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TITLE: ${{ inputs.title }}
+          BODY: ${{ inputs.body }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          printf '%s' "$BODY" > /tmp/claim-body.txt
+          gh issue create \
+            --title "$TITLE" \
+            --body-file /tmp/claim-body.txt \
+            --label "claim" \
+            --repo "$GITHUB_REPOSITORY"
