@@ -40,7 +40,9 @@ jobs:
 
       - name: Transition to state:intake-complete
         env:
-          GH_TOKEN: ${{ github.token }}
+          # PAT required — GITHUB_TOKEN-triggered label events are silenced by
+          # GitHub and would prevent eligibility.yml from firing.
+          GH_TOKEN: ${{ secrets.CLAIM_CREATION_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
           gh issue edit "$ISSUE_NUMBER" \

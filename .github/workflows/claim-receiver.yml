@@ -26,7 +26,11 @@ jobs:
 
       - name: Create claim issue
         env:
-          GH_TOKEN: ${{ github.token }}
+          # Must use CLAIM_CREATION_TOKEN (not github.token) so the issues:opened
+          # event is attributed to the PAT and downstream workflows (intake.yml,
+          # eligibility.yml, …) are allowed to trigger.  GITHUB_TOKEN-created
+          # events are silenced by GitHub to prevent workflow loops.
+          GH_TOKEN: ${{ secrets.CLAIM_CREATION_TOKEN }}
           TITLE: ${{ inputs.title }}
           BODY: ${{ inputs.body }}
           GITHUB_REPOSITORY: ${{ github.repository }}
