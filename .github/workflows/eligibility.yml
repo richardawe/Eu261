@@ -29,7 +29,9 @@ jobs:
           ISSUE_BODY: ${{ github.event.issue.body }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-          GH_TOKEN: ${{ github.token }}
+          # PAT required — run_eligibility.py adds state:eligibility-passed which
+          # must trigger draft.yml; GITHUB_TOKEN events are silenced by GitHub.
+          GH_TOKEN: ${{ secrets.CLAIM_CREATION_TOKEN }}
         run: |
           python scripts/run_eligibility.py
           # Capture resulting state for status update
