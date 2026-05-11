@@ -53,7 +53,7 @@ async def main() -> None:
     body = os.environ["ISSUE_BODY"]
     issue = os.environ["ISSUE_NUMBER"]
     repo = os.environ["GITHUB_REPOSITORY"]
-    priv_key = os.environ["NACL_PRIVATE_KEY"]
+    priv_key = os.environ["NACL_PRIVATE_KEY"].strip()
 
     def _fail(msg: str) -> None:
         _gh("issue", "comment", issue, "--repo", repo, "--body",

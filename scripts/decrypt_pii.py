@@ -31,6 +31,7 @@ _LABEL_MAP = {
 
 
 def decrypt_fields(body: str, private_key: str) -> dict[str, str]:
+    private_key = private_key.strip()  # guard against copy-paste newlines in GitHub Secrets
     result: dict[str, str] = {}
     for m in _PAT.finditer(body):
         key = _LABEL_MAP.get(m.group("label").strip())
