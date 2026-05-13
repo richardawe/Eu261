@@ -1,0 +1,14 @@
+{
+  "claim_id": "14",
+  "state": "state:intake-complete",
+  "state_label": "Received",
+  "flight": "BB AT319 ABC\u2192ABD 2026-05-03",
+  "updated_at": "2026-05-10T19:35:34.292640+00:00",
+  "timeline": [
+    {
+      "state": "state:intake-complete",
+      "state_label": "Received",
+      "at": "2026-05-10T19:35:34.292640+00:00"
+    }
+  ]
+}

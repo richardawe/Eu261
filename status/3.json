@@ -1,0 +1,14 @@
+{
+  "claim_id": "3",
+  "state": "state:draft-approved",
+  "state_label": "Draft approved",
+  "flight": "BA EZY1234 MAN\u2192DUB 2026-05-06",
+  "updated_at": "2026-05-10T19:55:38.705131+00:00",
+  "timeline": [
+    {
+      "state": "state:draft-approved",
+      "state_label": "Draft approved",
+      "at": "2026-05-10T19:55:38.705131+00:00"
+    }
+  ]
+}
