@@ -1,0 +1,111 @@
+{
+  "date": "2026-04-26",
+  "generatedAt": "2026-04-26T06:00:00.000Z",
+  "positions": [
+    {
+      "partyId": "labour",
+      "partyName": "Labour",
+      "shortName": "Lab",
+      "color": "#E4003B",
+      "socialScore": 12,
+      "economicScore": -22.6,
+      "confidence": 0.72,
+      "reasoning": [
+        "AI-estimated position for 2026-04-26 based on monitored news signals."
+      ],
+      "sources": [
+        "BBC Politics",
+        "Guardian Politics"
+      ],
+      "timestamp": "2026-04-26T06:00:00.000Z"
+    },
+    {
+      "partyId": "conservatives",
+      "partyName": "Conservative",
+      "shortName": "Con",
+      "color": "#0087DC",
+      "socialScore": 51.5,
+      "economicScore": 38.2,
+      "confidence": 0.81,
+      "reasoning": [
+        "AI-estimated position for 2026-04-26 based on monitored news signals."
+      ],
+      "sources": [
+        "BBC Politics",
+        "Guardian Politics"
+      ],
+      "timestamp": "2026-04-26T06:00:00.000Z"
+    },
+    {
+      "partyId": "reform_uk",
+      "partyName": "Reform UK",
+      "shortName": "Ref",
+      "color": "#12B6CF",
+      "socialScore": 77.5,
+      "economicScore": 48.1,
+      "confidence": 0.76,
+      "reasoning": [
+        "AI-estimated position for 2026-04-26 based on monitored news signals."
+      ],
+      "sources": [
+        "BBC Politics",
+        "Guardian Politics"
+      ],
+      "timestamp": "2026-04-26T06:00:00.000Z"
+    },
+    {
+      "partyId": "liberal_democrats",
+      "partyName": "Liberal Democrats",
+      "shortName": "LD",
+      "color": "#FAA61A",
+      "socialScore": -64.3,
+      "economicScore": -20.8,
+      "confidence": 0.76,
+      "reasoning": [
+        "AI-estimated position for 2026-04-26 based on monitored news signals."
+      ],
+      "sources": [
+        "BBC Politics",
+        "Guardian Politics"
+      ],
+      "timestamp": "2026-04-26T06:00:00.000Z"
+    },
+    {
+      "partyId": "green",
+      "partyName": "Green Party",
+      "shortName": "Grn",
+      "color": "#02A95B",
+      "socialScore": -76.9,
+      "economicScore": -67.3,
+      "confidence": 0.81,
+      "reasoning": [
+        "AI-estimated position for 2026-04-26 based on monitored news signals."
+      ],
+      "sources": [
+        "BBC Politics",
+        "Guardian Politics"
+      ],
+      "timestamp": "2026-04-26T06:00:00.000Z"
+    },
+    {
+      "partyId": "snp",
+      "partyName": "SNP",
+      "shortName": "SNP",
+      "color": "#EDDB49",
+      "socialScore": -46.3,
+      "economicScore": -37.3,
+      "confidence": 0.83,
+      "reasoning": [
+        "AI-estimated position for 2026-04-26 based on monitored news signals."
+      ],
+      "sources": [
+        "BBC Politics",
+        "Guardian Politics"
+      ],
+      "timestamp": "2026-04-26T06:00:00.000Z"
+    }
+  ],
+  "commentary": [],
+  "weeklyShifts": [],
+  "sources": []
+}

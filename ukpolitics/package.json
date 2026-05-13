@@ -1,0 +1,38 @@
+{
+  "name": "ukpolitics",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "politics:update": "tsx scripts/update.ts",
+    "politics:fetch": "tsx scripts/fetchNews.ts",
+    "politics:analyze": "tsx scripts/extractSignals.ts",
+    "politics:calculate": "tsx scripts/calculatePositions.ts",
+    "politics:comment": "tsx scripts/generateCommentary.ts",
+    "politics:snapshot": "tsx scripts/saveSnapshots.ts",
+    "politics:seed": "tsx scripts/seed.ts",
+    "politics:history": "tsx scripts/generateHistory.ts"
+  },
+  "dependencies": {
+    "next": "15.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "recharts": "^2.13.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "autoprefixer": "^10.4.20",
+    "openai": "^4.77.0",
+    "@anthropic-ai/sdk": "^0.33.1",
+    "rss-parser": "^3.13.0",
+    "postcss": "^8.5.1",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

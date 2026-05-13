@@ -47,7 +47,7 @@ async def main() -> None:
     body = os.environ["ISSUE_BODY"]
     issue = os.environ["ISSUE_NUMBER"]
     repo = os.environ["GITHUB_REPOSITORY"]
-    priv_key = os.environ["NACL_PRIVATE_KEY"]
+    priv_key = os.environ["NACL_PRIVATE_KEY"].strip()
     letter = os.environ.get("DRAFT_LETTER", "")
 
     def _fail(msg: str) -> None:
@@ -60,6 +60,17 @@ async def main() -> None:
         facts = parse_facts(body)
     except Exception as exc:
         _fail(f"Could not parse claim facts: `{exc}`")
+
+    import base64 as _b64
+    try:
+        _decoded_len = len(_b64.b64decode(priv_key))
+    except Exception:
+        _decoded_len = -1
+    if _decoded_len != 32:
+        _fail(
+            f"NACL_PRIVATE_KEY is invalid: decoded to {_decoded_len} bytes (need exactly 32). "
+            f"Re-paste the private key into the repo secret — ensure no extra characters."
+        )
 
     try:
         pii_dict = decrypt_fields(body, priv_key)

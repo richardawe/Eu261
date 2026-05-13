@@ -16,3 +16,8 @@ venv/
 receipts/
 
 node_modules/
+
+# ukpolitics Next.js build output
+ukpolitics/.next/
+ukpolitics/out/
+ukpolitics/next-env.d.ts
