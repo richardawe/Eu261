@@ -1,0 +1,208 @@
+{
+  "date": "2026-05-13",
+  "generatedAt": "2026-05-13T06:00:00Z",
+  "positions": [
+    {
+      "partyId": "labour",
+      "partyName": "Labour",
+      "shortName": "Lab",
+      "color": "#E4003B",
+      "socialScore": 12,
+      "economicScore": -22,
+      "confidence": 0.84,
+      "reasoning": [
+        "[immigration] Tougher border enforcement messaging and Rwanda-continuation rhetoric moves Labour rightward on the social axis versus its 2024 election baseline.",
+        "[defense] Increased NATO commitment and defence spending announcements signal a break from traditional left-wing pacifism.",
+        "[economy] NHS investment programme and workers' rights reforms anchor economic-left positioning.",
+        "[welfare] Means-testing proposals for winter fuel payments represent a modest rightward economic signal."
+      ],
+      "sources": ["BBC Politics", "Guardian Politics", "Reuters UK", "PoliticsHome"],
+      "timestamp": "2026-05-13T06:00:00Z"
+    },
+    {
+      "partyId": "conservatives",
+      "partyName": "Conservative",
+      "shortName": "Con",
+      "color": "#0087DC",
+      "socialScore": 58,
+      "economicScore": 38,
+      "confidence": 0.81,
+      "reasoning": [
+        "[immigration] Continued calls for lower net migration and post-Brexit border control reinforce strong conservative social positioning.",
+        "[taxation] Business tax relief package and income tax cut proposals consolidate economic-right alignment under Badenoch.",
+        "[constitutional] Resistance to Lords reform and defence of traditional institutions adds to conservative social score.",
+        "[economy] Deregulation and planning reform commitments signal further economic-right movement."
+      ],
+      "sources": ["BBC Politics", "Telegraph Politics", "Financial Times", "Sky News Politics"],
+      "timestamp": "2026-05-13T06:00:00Z"
+    },
+    {
+      "partyId": "reform_uk",
+      "partyName": "Reform UK",
+      "shortName": "Ref",
+      "color": "#12B6CF",
+      "socialScore": 82,
+      "economicScore": 50,
+      "confidence": 0.88,
+      "reasoning": [
+        "[immigration] Zero-net-migration demand and deportation-first rhetoric places Reform at the far conservative extreme on the social axis.",
+        "[environment] Net-zero abolition policy generates strong rightward signal on both economic and social axes.",
+        "[taxation] Flat tax proposals and large-scale public sector cuts anchor the economic-right position.",
+        "[law_order] Stop-and-search expansion and prison-building pledges reinforce conservative social positioning."
+      ],
+      "sources": ["BBC Politics", "Guardian Politics", "Telegraph Politics", "Sky News Politics"],
+      "timestamp": "2026-05-13T06:00:00Z"
+    },
+    {
+      "partyId": "liberal_democrats",
+      "partyName": "Liberal Democrats",
+      "shortName": "LD",
+      "color": "#FAA61A",
+      "socialScore": -62,
+      "economicScore": -18,
+      "confidence": 0.78,
+      "reasoning": [
+        "[constitutional] Strong pro-European alignment and Lords reform support anchor the progressive end of the social axis.",
+        "[healthcare] NHS staffing investment and mental health spending proposals generate moderate economic-left signals.",
+        "[law_order] Opposition to extended police powers and civil liberties focus reinforces progressive social positioning.",
+        "[housing] Pro-planning reform stance for housebuilding introduces a modest economic-right signal."
+      ],
+      "sources": ["BBC Politics", "Guardian Politics", "PoliticsHome", "Financial Times"],
+      "timestamp": "2026-05-13T06:00:00Z"
+    },
+    {
+      "partyId": "green",
+      "partyName": "Green Party",
+      "shortName": "Grn",
+      "color": "#02A95B",
+      "socialScore": -72,
+      "economicScore": -65,
+      "confidence": 0.76,
+      "reasoning": [
+        "[environment] Public ownership of energy infrastructure demand is among the strongest economic-left signals of any party.",
+        "[welfare] Universal basic income and wealth-tax proposals reinforce far-left economic positioning.",
+        "[constitutional] Strong pro-rights, anti-surveillance stance anchors the progressive social extreme.",
+        "[housing] Social housing nationalisation proposals add to economic-left score."
+      ],
+      "sources": ["Guardian Politics", "BBC Politics", "PoliticsHome"],
+      "timestamp": "2026-05-13T06:00:00Z"
+    },
+    {
+      "partyId": "snp",
+      "partyName": "SNP",
+      "shortName": "SNP",
+      "color": "#EDDB49",
+      "socialScore": -48,
+      "economicScore": -32,
+      "confidence": 0.74,
+      "reasoning": [
+        "[constitutional] Independence-first civic nationalism and devolution demands generate a strong progressive constitutional signal.",
+        "[healthcare] Holyrood NHS investment and free prescriptions reinforce center-left economic positioning.",
+        "[immigration] Pro-immigration stance for Scotland differentiates SNP from GB-wide conservative trend.",
+        "[foreign_policy] Opposition to Trident renewal and NATO ambivalence add to progressive social score."
+      ],
+      "sources": ["BBC Scotland", "Guardian Politics", "PoliticsHome"],
+      "timestamp": "2026-05-13T06:00:00Z"
+    }
+  ],
+  "commentary": [
+    "Labour's ongoing tightening of immigration rhetoric has moved the party marginally rightward on the social axis compared to its 2024 general election baseline, diverging from traditional left-wing positions on open borders and reflecting a deliberate electoral triangulation toward swing voters in the English Midlands and North.",
+    "The Conservatives under Kemi Badenoch have continued their post-2024 repositioning further right on both axes, with a succession of deregulation and tax-cut proposals signalling a decisive departure from the 'one nation' tradition that characterised the Cameron and Johnson years.",
+    "Reform UK remains anchored at the intersection of the far-conservative and economically right quadrant, with Farage's net-zero abolition and flat-tax demands generating the strongest rightward signals of any tracked party this week.",
+    "The Liberal Democrats showed modest economic-left movement following NHS staffing announcements, while their social positioning remains firmly in the progressive zone — the party continues to occupy a distinctive niche combining economic centrism with strong social liberalism.",
+    "The Green Party's public ownership proposals and wealth redistribution agenda maintain their position as the most economically left of the tracked parties, while their intersectional progressive framing on social issues reinforces the far-progressive social score.",
+    "The SNP's Westminster activity this week focused on devolution demands and public services investment, maintaining their center-left economic and progressive social coordinates — positions that reflect Holyrood governance priorities more than opposition rhetoric."
+  ],
+  "weeklyShifts": [
+    {
+      "partyId": "labour",
+      "partyName": "Labour",
+      "socialDelta": 2.3,
+      "economicDelta": -0.8,
+      "description": "Labour shifted slightly toward the conservative axis following renewed immigration enforcement announcements, while maintaining its economic-left alignment through NHS spending commitments.",
+      "magnitude": 2.4
+    },
+    {
+      "partyId": "conservatives",
+      "partyName": "Conservative",
+      "socialDelta": 1.1,
+      "economicDelta": 2.1,
+      "description": "The Conservatives moved further economically right this week following new tax relief and deregulation proposals under Badenoch's economic platform.",
+      "magnitude": 2.4
+    },
+    {
+      "partyId": "reform_uk",
+      "partyName": "Reform UK",
+      "socialDelta": 0.5,
+      "economicDelta": 1.8,
+      "description": "Reform UK consolidated its far-right economic position following renewed calls for net-zero abolition and a flat-tax reform package.",
+      "magnitude": 1.9
+    },
+    {
+      "partyId": "liberal_democrats",
+      "partyName": "Liberal Democrats",
+      "socialDelta": -0.4,
+      "economicDelta": -1.2,
+      "description": "The Liberal Democrats moved marginally economically left following NHS workforce investment proposals, while social positioning remained stable.",
+      "magnitude": 1.3
+    }
+  ],
+  "sources": [
+    {
+      "url": "https://www.bbc.co.uk/news/politics",
+      "title": "Labour announces new border enforcement review",
+      "source": "BBC Politics",
+      "weight": 0.9,
+      "publishedAt": "2026-05-13T08:00:00Z"
+    },
+    {
+      "url": "https://www.telegraph.co.uk/politics",
+      "title": "Conservatives unveil business deregulation package",
+      "source": "Telegraph Politics",
+      "weight": 0.8,
+      "publishedAt": "2026-05-13T09:30:00Z"
+    },
+    {
+      "url": "https://www.theguardian.com/politics",
+      "title": "Reform UK calls for immediate net-zero reversal",
+      "source": "Guardian Politics",
+      "weight": 0.8,
+      "publishedAt": "2026-05-13T10:00:00Z"
+    },
+    {
+      "url": "https://www.ft.com/uk-politics",
+      "title": "Lib Dems propose NHS staffing investment framework",
+      "source": "Financial Times",
+      "weight": 0.9,
+      "publishedAt": "2026-05-13T11:00:00Z"
+    },
+    {
+      "url": "https://www.theguardian.com/politics",
+      "title": "Green Party calls for public ownership of energy infrastructure",
+      "source": "Guardian Politics",
+      "weight": 0.8,
+      "publishedAt": "2026-05-13T12:00:00Z"
+    },
+    {
+      "url": "https://www.bbc.co.uk/news/scotland",
+      "title": "SNP tables devolution amendment in Westminster",
+      "source": "BBC Scotland",
+      "weight": 0.9,
+      "publishedAt": "2026-05-13T13:00:00Z"
+    },
+    {
+      "url": "https://news.sky.com/politics",
+      "title": "Labour defence spending commitment confirmed for NATO target",
+      "source": "Sky News Politics",
+      "weight": 0.8,
+      "publishedAt": "2026-05-12T16:00:00Z"
+    },
+    {
+      "url": "https://politicshome.com/news/uk",
+      "title": "Conservative opposition motion on planning reform fails",
+      "source": "PoliticsHome",
+      "weight": 0.75,
+      "publishedAt": "2026-05-12T14:00:00Z"
+    }
+  ]
+}
