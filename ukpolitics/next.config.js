@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const isGitHubPages = process.env.GITHUB_PAGES === 'true';
-const repoName = 'eu261';
+const repoName = 'Eu261';  // must match exact GitHub repo casing
 
 const nextConfig = {
   output: 'export',

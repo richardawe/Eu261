@@ -2,7 +2,6 @@ name: UK Politics Matrix — Update & Deploy
 
 on:
   schedule:
-    # Run every 6 hours
     - cron: "0 */6 * * *"
   workflow_dispatch:
     inputs:
@@ -11,18 +10,20 @@ on:
         required: false
         default: "false"
 
+# Share the same concurrency group as pages.yml so both queue safely
+# and neither half-deploys GitHub Pages.
 concurrency:
-  group: ukpolitics-update
+  group: "pages"
   cancel-in-progress: false
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
   update:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pages: write
-      id-token: write
-
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -40,12 +41,26 @@ jobs:
           cache: npm
           cache-dependency-path: ukpolitics/package-lock.json
 
-      - name: Install dependencies
+      - name: Install ukpolitics dependencies
         working-directory: ukpolitics
         run: npm ci
 
       # ── Data pipeline ────────────────────────────────────────────────────────
-      - name: Fetch news & analyse positions
+
+      - name: Seed data if none exists
+        if: inputs.skip_fetch != 'true'
+        working-directory: ukpolitics
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ ! -f public/data/latest.json ]; then
+            echo "No data found — running seed…"
+            npm run politics:seed
+          fi
+
+      - name: Fetch news & update positions
         if: inputs.skip_fetch != 'true'
         working-directory: ukpolitics
         env:
@@ -54,43 +69,35 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: npm run politics:update
 
-      - name: Seed data if no data exists
-        working-directory: ukpolitics
-        env:
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: |
-          if [ ! -f public/data/latest.json ]; then
-            echo "No existing data — running seed…"
-            npm run politics:seed
-          fi
+      # ── Build ukpolitics Next.js static export ───────────────────────────────
 
-      # ── Next.js static build ─────────────────────────────────────────────────
-      - name: Build static site
+      - name: Build ukpolitics static site
         working-directory: ukpolitics
         env:
           GITHUB_PAGES: "true"
           NODE_ENV: production
         run: npm run build
 
-      # ── Merge with existing site/ and deploy ────────────────────────────────
-      - name: Prepare combined site artifact
+      # ── Assemble combined Pages artifact ─────────────────────────────────────
+
+      - name: Assemble site artifact
         run: |
-          # Include main site
           mkdir -p _site
+          # Main EU261 claims site
           cp -r site/. _site/
-          # Overlay ukpolitics build
+          # UK Politics app under /ukpolitics/
           mkdir -p _site/ukpolitics
           cp -r ukpolitics/out/. _site/ukpolitics/
 
-      - name: Inject submission token (existing site)
+      - name: Inject submission token
         env:
           SUBMISSIONS_TOKEN: ${{ vars.SUBMISSIONS_TOKEN }}
         run: |
-          if [ -f _site/app.js ] && [ -n "$SUBMISSIONS_TOKEN" ]; then
+          if [ -n "$SUBMISSIONS_TOKEN" ] && [ -f _site/app.js ]; then
             sed -i "s/REPLACE_WITH_FINE_GRAINED_PAT/${SUBMISSIONS_TOKEN}/" _site/app.js
           fi
+
+      # ── Deploy to GitHub Pages ────────────────────────────────────────────────
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -104,11 +111,16 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-      # ── Commit updated data back to main ─────────────────────────────────────
+      # ── Persist updated data files to repo ───────────────────────────────────
+
       - name: Commit updated data files
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add ukpolitics/public/data/
-          git diff --staged --quiet || git commit -m "chore(ukpolitics): update political matrix data $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          git push origin HEAD:main || echo "Push failed (may already be up to date)"
+          if ! git diff --staged --quiet; then
+            git commit -m "chore(ukpolitics): update matrix data $(date -u +%Y-%m-%dT%H:%M:%SZ) [skip ci]"
+            git push origin HEAD:main || echo "Push skipped (branch protection or no changes)"
+          else
+            echo "No data changes to commit"
+          fi
