@@ -59,8 +59,10 @@ export async function extractSignalsFromArticles(
 }
 
 if (process.argv[1]?.endsWith('extractSignals.ts')) {
-  const { fetchAllNews } = await import('./fetchNews');
-  const articles = await fetchAllNews(5);
-  const signals = await extractSignalsFromArticles(articles);
-  console.log(JSON.stringify(signals, null, 2));
+  (async () => {
+    const { fetchAllNews } = await import('./fetchNews');
+    const articles = await fetchAllNews(5);
+    const signals = await extractSignalsFromArticles(articles);
+    console.log(JSON.stringify(signals, null, 2));
+  })();
 }
