@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import PoliticalMatrix from '@/components/PoliticalMatrix';
 import TimelineSlider from '@/components/TimelineSlider';
 import TrendChart from '@/components/TrendChart';
+import { dataUrl } from '@/lib/dataUrl';
 import type { DailySnapshot, DataManifest, PartyPosition } from '@/lib/types';
 
 const TRAIL_DAYS = 7;
@@ -18,7 +19,7 @@ export default function HistoryPage() {
   const playRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    fetch('data/manifest.json')
+    fetch(dataUrl('data/manifest.json'))
       .then((r) => r.json() as Promise<DataManifest>)
       .then((m) => {
         setManifest(m);
@@ -31,7 +32,7 @@ export default function HistoryPage() {
     async (date: string) => {
       if (snapshots.has(date)) return;
       try {
-        const r = await fetch(`data/history/${date}.json`);
+        const r = await fetch(dataUrl(`data/history/${date}.json`));
         if (!r.ok) return;
         const snap = (await r.json()) as DailySnapshot;
         setSnapshots((prev) => new Map(prev).set(date, snap));
