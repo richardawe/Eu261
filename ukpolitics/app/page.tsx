@@ -6,6 +6,7 @@ import PoliticalMatrix from '@/components/PoliticalMatrix';
 import CommentaryPanel from '@/components/CommentaryPanel';
 import MovementIndicator from '@/components/MovementIndicator';
 import SourceList from '@/components/SourceList';
+import { dataUrl } from '@/lib/dataUrl';
 import type { DailySnapshot, PartyPosition } from '@/lib/types';
 
 function buildPartyColors(positions: PartyPosition[]): Record<string, string> {
@@ -17,7 +18,7 @@ export default function HomePage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('data/latest.json')
+    fetch(dataUrl('data/latest.json'))
       .then((r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json() as Promise<DailySnapshot>;
