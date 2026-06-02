@@ -7,7 +7,7 @@ import { SIGNAL_EXTRACTION_PROMPT, COMMENTARY_PROMPT } from './index';
 
 const BASE_URL = 'https://openrouter.ai/api/v1';
 
-const MODEL = 'openai/gpt-oss-120b:free';
+const MODEL = 'openai/gpt-oss';
 
 export class OpenRouterProvider implements AIProvider {
   name = 'openrouter';
