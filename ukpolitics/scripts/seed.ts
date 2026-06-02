@@ -100,7 +100,7 @@ async function seed() {
         ? 'https://openrouter.ai/api/v1'
         : 'https://api.openai.com/v1';
       const apiKey = process.env.OPENROUTER_API_KEY ?? process.env.OPENAI_API_KEY!;
-      const model = provider.name === 'openrouter' ? 'openai/gpt-4o-mini' : 'gpt-4o-mini';
+      const model = provider.name === 'openrouter' ? 'openai/gpt-oss-120b:free' : 'gpt-4o-mini';
 
       const res = await fetch(`${baseUrl}/chat/completions`, {
         method: 'POST',
@@ -114,12 +114,12 @@ async function seed() {
         },
         body: JSON.stringify({
           model,
+          max_tokens: 2048,
           messages: [
             { role: 'system', content: 'You are a political analyst. Return only valid JSON with no markdown.' },
             { role: 'user', content: SEED_PROMPT },
           ],
           temperature: 0.4,
-          response_format: { type: 'json_object' },
         }),
       });
       const data = (await res.json()) as { choices: Array<{ message: { content: string } }> };
