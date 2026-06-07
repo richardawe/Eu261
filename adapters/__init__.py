@@ -5,14 +5,17 @@ Add new carriers by importing their adapter and adding the code here.
 """
 from __future__ import annotations
 
+from adapters.british_airways import BritishAirwaysAdapter
 from adapters.easyjet import EasyJetAdapter
 from adapters.ryanair import RyanairAdapter
 from adapters.base import AirlineAdapter
 
 _REGISTRY: dict[str, type[AirlineAdapter]] = {
-    "U2": EasyJetAdapter,   # easyJet
+    "BA": BritishAirwaysAdapter,  # British Airways
+    "BAW": BritishAirwaysAdapter,
+    "U2": EasyJetAdapter,         # easyJet
     "EZY": EasyJetAdapter,
-    "FR": RyanairAdapter,   # Ryanair
+    "FR": RyanairAdapter,         # Ryanair
     "RYR": RyanairAdapter,
 }
 

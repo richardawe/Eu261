@@ -83,7 +83,7 @@ async def main() -> None:
         _fail(
             f"No adapter available for carrier `{facts.flight_carrier_iata}`. "
             f"Manual submission required.\n\n"
-            f"Supported carriers: U2 (easyJet), FR (Ryanair)."
+            f"Supported carriers: BA (British Airways), U2 (easyJet), FR (Ryanair)."
         )
 
     try:
