@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       issues: write
-      contents: read
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -52,6 +52,16 @@ jobs:
         run: |
           mkdir -p /tmp/screenshots
           python scripts/run_submit.py
+
+      - name: Write claim status to gh-pages
+        if: success()
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          CURRENT_STATE: state:submitted-airline
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/write_status.py
 
       - name: Upload screenshots on failure
         if: failure()
