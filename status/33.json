@@ -1,0 +1,14 @@
+{
+  "claim_id": "33",
+  "state": "state:intake-complete",
+  "state_label": "Received",
+  "flight": "BA EZY123 LHR\u2192MAN 2026-06-01",
+  "updated_at": "2026-06-07T20:57:03.942338+00:00",
+  "timeline": [
+    {
+      "state": "state:intake-complete",
+      "state_label": "Received",
+      "at": "2026-06-07T20:57:03.942338+00:00"
+    }
+  ]
+}
