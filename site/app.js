@@ -22,8 +22,8 @@ const GITHUB_REPO = "richardawe/Eu261";
  */
 const GITHUB_SUBMISSIONS_TOKEN = "REPLACE_WITH_FINE_GRAINED_PAT";
 
-/** Branch that holds claim-receiver.yml — update after merging to main. */
-const DISPATCH_REF = "main";
+/** Branch that holds claim-receiver.yml (repo default branch). */
+const DISPATCH_REF = "claude/eu261-claims-agent-glrGY";
 
 /** Kept for the manual-fallback URL in the error state. */
 const GITHUB_ISSUES_URL = `https://github.com/${GITHUB_REPO}/issues/new`;
