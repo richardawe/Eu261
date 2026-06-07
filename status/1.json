@@ -1,0 +1,14 @@
+{
+  "claim_id": "1",
+  "state": "state:intake-complete",
+  "state_label": "Received",
+  "flight": "RAM AT819 MAN\u2192DUB 2026-04-14",
+  "updated_at": "2026-05-10T19:55:23.816634+00:00",
+  "timeline": [
+    {
+      "state": "state:intake-complete",
+      "state_label": "Received",
+      "at": "2026-05-10T19:55:23.816634+00:00"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "claim_id": "22",
+  "state": "state:intake-complete",
+  "state_label": "Received",
+  "flight": "U2 EZY123 MAN\u2192AYT 2026-05-01",
+  "updated_at": "2026-05-11T04:57:37.302845+00:00",
+  "timeline": [
+    {
+      "state": "state:intake-complete",
+      "state_label": "Received",
+      "at": "2026-05-11T04:57:37.302845+00:00"
+    }
+  ]
+}
